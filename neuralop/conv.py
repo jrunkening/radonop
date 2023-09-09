@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from torch.fft import rfftn, irfftn
 
 class SpectralConv(nn.Module):
     def __init__(self, in_channels, out_channels, modes: tuple, dtype=torch.float32) -> None:
@@ -28,9 +29,9 @@ class SpectralConv(nn.Module):
 
 
     def forward(self, xs: torch.tensor):
-        xs_spectrum = torch.fft.rfftn(xs, dim=[*range(2, xs.dim())])
+        xs_spectrum = rfftn(xs, dim=[*range(2, xs.dim())])
         xs_spectrum_applied = self.apply_spectral_pattern(xs_spectrum)
-        xs_applied = torch.fft.irfftn(xs_spectrum_applied, s=xs.shape[2:], dim=[*range(2, xs_spectrum_applied.dim())])
+        xs_applied = irfftn(xs_spectrum_applied, s=xs.shape[2:], dim=[*range(2, xs_spectrum_applied.dim())])
 
         return xs_applied
 
@@ -59,7 +60,3 @@ class SpectralConv(nn.Module):
         xs_spectrum_applied[slices] = xs_spectrum_sliced_applied
 
         return xs_spectrum_applied
-
-
-if __name__ == "__main__":
-    print(SpectralConv(2, 5, (2,2,2,3,3))(torch.ones(2,2,3,4,5,6,7, dtype=torch.float32)).shape)
