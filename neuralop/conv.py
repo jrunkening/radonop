@@ -3,7 +3,7 @@ from torch import nn
 from torch.fft import rfftn, irfftn
 
 class SpectralConv(nn.Module):
-    def __init__(self, in_channels, out_channels, modes: tuple, dtype=torch.float32) -> None:
+    def __init__(self, in_channels: int, out_channels: int, modes: tuple, dtype=torch.float32) -> None:
         super().__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
