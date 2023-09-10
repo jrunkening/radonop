@@ -2,10 +2,17 @@
     "cSpell.words": [
         "conved",
         "dtype",
+        "GELU",
+        "iradon",
         "irfftn",
+        "keepdim",
+        "meshgrid",
         "neuralop",
+        "optim",
         "radonop",
         "rfft",
-        "rfftn"
+        "rfftn",
+        "torchvision",
+        "ynorm"
     ]
 }
