@@ -17,8 +17,11 @@ def radon(image: torch.tensor):
     return image_rotated
 
 
-def iradon(image_transformed: torch.tensor, modes=(16, 16), tolerance=1e-2, learning_rate=1e-4, weight_decay=1e-4, device="cpu"):
+def iradon(image_transformed: torch.tensor, tolerance=1e-1, learning_rate=1e-4, weight_decay=1e-4, device="cpu"):
     image_channels = image_transformed.size(1)
+    modes = torch.ceil(torch.tensor(image_transformed.shape[2:]) / 2).type(torch.IntTensor).tolist()
+    params_file = PARAMS_PATH.joinpath(f"iradon_{modes}.pth")
+
     image_transformed = torch.cat((image_transformed, gen_grid(image_transformed)), dim=1)
 
     operator = InverseRadonOperator(
@@ -27,16 +30,18 @@ def iradon(image_transformed: torch.tensor, modes=(16, 16), tolerance=1e-2, lear
         modes=modes,
         activate=torch.nn.GELU()
     )
-    operator.load_state_dict(torch.load(PARAMS_PATH.joinpath("iradon.pth")))
+    if params_file.exists():
+        operator.load_state_dict(torch.load(params_file))
     operator = operator.to(device)
     operator.train()
-    optimizer = torch.optim.AdamW(operator.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = torch.optim.Adagrad(operator.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     while (loss := train(image_transformed, image_channels, operator, H1Loss(d=2), optimizer, device)) > tolerance:
-        print(f"loss: {loss} > tolerance: {tolerance}")
+        print(f"\r\033[0K loss: {loss:.5f} > tolerance: {tolerance}", end="", flush=True)
+    print() # offset log
 
     operator = operator.to("cpu")
-    torch.save(operator.state_dict(), PARAMS_PATH.joinpath("iradon.pth"))
+    torch.save(operator.state_dict(), params_file)
 
     return operator(image_transformed).detach()
 
