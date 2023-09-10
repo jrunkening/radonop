@@ -2,6 +2,7 @@
     "cSpell.words": [
         "conved",
         "dtype",
+        "fock",
         "GELU",
         "iradon",
         "irfftn",
@@ -9,6 +10,7 @@
         "meshgrid",
         "neuralop",
         "optim",
+        "qutip",
         "radonop",
         "rfft",
         "rfftn",

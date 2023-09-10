@@ -19,6 +19,7 @@ torchvision = [
     { url = "https://download.pytorch.org/whl/cu118/torchvision-0.15.2%2Bcu118-cp311-cp311-linux_x86_64.whl", platform = 'linux' },
     { url = "https://download.pytorch.org/whl/cu118/torchvision-0.15.2%2Bcu118-cp311-cp311-win_amd64.whl", platform = "win32"}
 ]
+qutip = "^4.7.3"
 
 [build-system]
 requires = ["poetry-core"]
