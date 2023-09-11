@@ -20,6 +20,9 @@ torchvision = [
     { url = "https://download.pytorch.org/whl/cu118/torchvision-0.15.2%2Bcu118-cp311-cp311-win_amd64.whl", platform = "win32"}
 ]
 qutip = "^4.7.3"
+jupyterlab = "^4.0.5"
+h5py = "^3.9.0"
+matplotlib = "^3.7.2"
 
 [build-system]
 requires = ["poetry-core"]
